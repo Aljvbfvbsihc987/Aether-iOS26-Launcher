@@ -43,6 +43,20 @@ jobs:
           test -n "$PROJECT_DIR"
           echo "$PROJECT_DIR" > project_dir.txt
 
+      - name: Fix Java and Kotlin compatibility
+        run: |
+          PROJECT_DIR=$(cat project_dir.txt)
+          FILE="$PROJECT_DIR/app/build.gradle.kts"
+          sed -i '/android {/a\
+              compileOptions {\
+                  sourceCompatibility = JavaVersion.VERSION_17\
+                  targetCompatibility = JavaVersion.VERSION_17\
+              }\
+              kotlinOptions {\
+                  jvmTarget = "17"\
+              }' "$FILE"
+          cat "$FILE"
+
       - name: Build debug APK
         run: |
           cd "$(cat project_dir.txt)"

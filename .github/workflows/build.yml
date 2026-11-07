@@ -55,7 +55,12 @@ jobs:
               kotlinOptions {\
                   jvmTarget = "17"\
               }' "$FILE"
-          cat "$FILE"
+
+      - name: Fix Kotlin singleLine property
+        run: |
+          PROJECT_DIR=$(cat project_dir.txt)
+          FILE="$PROJECT_DIR/app/src/main/java/com/aether/ioslauncher/MainActivity.kt"
+          sed -i 's/singleLine = true/setSingleLine(true)/' "$FILE"
 
       - name: Build debug APK
         run: |
